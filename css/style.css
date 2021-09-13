@@ -1,0 +1,87 @@
+header {
+    height: 10vh;
+    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+}
+
+header h1 {
+    margin: auto;
+    font-size: xx-large;
+}
+
+nav {
+    height: 5vh;
+    background-color: lightpink;
+    display: flex;
+    justify-content: space-around;
+}
+
+.nav_menu {
+    width: 50px;
+    height: 5vh;
+    box-shadow: 0 0 0 1px #000 inset;  /*inner border*/
+    margin: 0 auto;
+}
+
+main {
+    height: 80vh;
+    background-color: lightyellow;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 15px;
+}
+
+footer {
+    height: 10vh;
+    background: lightgray;
+    display: flex;
+    justify-content: center;
+}
+
+footer * {
+    margin: auto;
+}
+
+#monitor_area {
+    width: 15vh;
+    position: absolute;
+    left: 150vh;
+    top: 200px;
+    background-color:bisque;
+    
+}
+
+.monitor {
+    border: 2px dotted grey;
+    display: flex;
+    flex-direction: column;
+}
+
+.monitor span {
+    border: 1px solid black;
+    height: 20px;
+    padding: 5px;
+}
+
+#focus_status, #keydown_status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+#playground_area {
+    display: flex;
+    justify-content: center;
+    border: 1.5px solid black;
+    margin: 0 auto;
+    min-width: 500px;
+
+}
+
+#playground {
+    width: 500px;
+}
