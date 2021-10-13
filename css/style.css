@@ -46,9 +46,12 @@ footer * {
 }
 
 #monitor_area {
+    /* temporary hiden */
+    display: none;
+
     width: 15vh;
     position: absolute;
-    left: 150vh;
+    right: 25vh;
     top: 200px;
     background-color:bisque;
     
@@ -66,7 +69,7 @@ footer * {
     padding: 5px;
 }
 
-#focus_status, #keydown_status {
+#focus_status, #keydown_status, #res_status {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,12 +79,11 @@ footer * {
 #playground_area {
     display: flex;
     justify-content: center;
-    border: 1.5px solid black;
-    margin: 0 auto;
-    min-width: 500px;
-
+    border: 0.5px solid black;
+    border-collapse: collapse;
+    margin: 1vh auto;
 }
 
 #playground {
-    width: 500px;
+
 }

@@ -7,7 +7,13 @@
     <title>🎲 Vanilla Tetris 🎲</title>
     <link rel="stylesheet" href="./css/init.css">
     <link rel="stylesheet" href="./css/style.css">
-    <script defer src="./js/main.js"></script>
+
+    <script defer src="./js/view.js"></script>
+    <script defer src="./js/controller.js"></script>
+    <script defer src="./js/model.js"></script>
+    
+    
+    
 </head>
 <body>
     <header>
@@ -27,7 +33,11 @@
             </div>
             <div class="monitor">
                 <span>keydown</span>
-                <div id="keydown_status">bar</div>
+                <div id="keydown_status">none</div>
+            </div>
+            <div class="monitor">
+                <span>resolution</span>
+                <div id="res_status"></div>
             </div>
         </div>
         
