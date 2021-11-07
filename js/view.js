@@ -9,18 +9,16 @@ let ctx = CANVAS.getContext('2d');
 ctx.stroke();
 ctx.lineWidth = 0.1;
 
-initialize();
-drawMapOutline();
+initializeDisplay();
+fillCoordinatePoint(9,15);
 
 
-
-
-function initialize() {
+function initializeDisplay() {
     ctx = CANVAS.getContext('2d');
     // set up canvas outline
     ctx.stroke();
     ctx.lineWidth = 0.1;
-    
+    drawMapOutline();    
 }
 
 function drawMapOutline() {
@@ -36,4 +34,15 @@ function drawMapOutline() {
             ctx.strokeRect(c*BRICK_SIZE, r*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
         }
     }
+}
+
+function fillCoordinatePoint(x_pos, y_pos){
+    let p_width = CANVAS.width / BRICK_SIZE;
+    let p_height = CANVAS.height / BRICK_SIZE;
+    ctx.fillStyle = "#FF0000";
+    ctx.fillRect(x_pos*BRICK_SIZE, y_pos*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
+}
+
+function updateMap() {
+
 }
