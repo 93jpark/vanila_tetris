@@ -5,17 +5,26 @@ console.log('model is connected');
 class TetrisMap {
     constructor(mapWidth, mapHeight) {
         this.mapSize = {row: null, col: null};
-        this.status = Array(16);
-        for(let i = 0; i < this.status.length; i++) {
-            this.status[i] = Array(10);
-            this.status[i].fill(0);
-        }
+        this.status = this.arrayInit(mapWidth, mapHeight);
+        
+        
         // status[x][y]
         console.log(this.status);
     }
-}
 
-let tm = new TetrisMap(10, 16);
+    // get num of col/row, then init array for mapping
+    arrayInit(height, width) {
+        let arr = Array(height);
+        for(let i = 0; i < height; i++) {
+            arr[i] = Array(width);
+            arr[i].fill(0);
+        }
+        return arr;
+    }
+
+} 
+
+let tm = new TetrisMap(16, 10);
 tm.status[1][1] = 1;
 tm.status[7][7] = 1;
 
