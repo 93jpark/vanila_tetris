@@ -25,9 +25,6 @@ function drawMapOutline() {
     let row = CANVAS.height / BRICK_SIZE;
     let col = CANVAS.width / BRICK_SIZE;
     console.log(`Tetris playground size: ${col} x ${row}`)
-    let mapRow = row;
-    let mapCol = col;
-    let mapArr = 0;
 
     for(let r = 0; r <= row; r++) {
         for(let c = 0; c <= col; c++) {
@@ -37,8 +34,6 @@ function drawMapOutline() {
 }
 
 function fillCoordinatePoint(x_pos, y_pos){
-    let p_width = CANVAS.width / BRICK_SIZE;
-    let p_height = CANVAS.height / BRICK_SIZE;
     ctx.fillStyle = "#FF0000";
     ctx.fillRect(x_pos*BRICK_SIZE, y_pos*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
 }

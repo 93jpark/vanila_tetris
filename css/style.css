@@ -47,7 +47,7 @@ footer * {
 
 #monitor_area {
     /* temporary hiden */
-    display: none;
+    /*display: none;*/
 
     width: 15vh;
     position: absolute;
