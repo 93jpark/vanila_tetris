@@ -28,7 +28,5 @@ class TetrisMap {
 
 } 
 
-let tm = new TetrisMap(10, 16);
-tm.status[1][1] = 1;
-tm.status[7][7] = 1;
+
 

@@ -4,7 +4,7 @@ console.log('controller is connected');
 document.addEventListener('keydown', logKey);
 window.addEventListener('keydown', disableScroll);
 document.addEventListener('keydown', detectKeyStroke);
-document.querySelector('#res_status').innerHTML = `${CANVAS.offsetWidth} * ${CANVAS.offsetHeight}`;
+//document.querySelector('#res_status').innerHTML = `${CANVAS.offsetWidth} * ${CANVAS.offsetHeight}`;
 
 let temp_count = 0; // will be removed later
 
@@ -67,10 +67,11 @@ function logKey(e) {
     }
 }
 
-// monitor whether focus status
-if (CANVAS.hasFocus) {
-    document.querySelector('#focus_status').innerHTML = `out`;
-} else {
-    document.querySelector('#focus_status').innerHTML = `in`;
-}
+
+// // monitor whether focus status
+// if (CANVAS.hasFocus) {
+//     document.querySelector('#focus_status').innerHTML = `out`;
+// } else {
+//     document.querySelector('#focus_status').innerHTML = `in`;
+// }
 

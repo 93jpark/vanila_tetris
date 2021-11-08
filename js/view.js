@@ -1,16 +1,6 @@
 'use strict';
 console.log('view is connected');
 
-/* GLOBAL CONST for canvas */
-const CANVAS = document.querySelector('#playground');
-const BRICK_SIZE = 50;
-
-let ctx = CANVAS.getContext('2d');
-ctx.stroke();
-ctx.lineWidth = 0.1;
-
-initializeDisplay();
-fillCoordinatePoint(9,15);
 
 
 function initializeDisplay() {
@@ -35,7 +25,9 @@ function drawMapOutline() {
 
 function fillCoordinatePoint(x_pos, y_pos){
     ctx.fillStyle = "#FF0000";
+    y_pos -= tm.mapSize.height-1;
     ctx.fillRect(x_pos*BRICK_SIZE, y_pos*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
+    console.log(`filled x:${x_pos}, y:${y_pos}`);
 }
 
 function updateMap() {
