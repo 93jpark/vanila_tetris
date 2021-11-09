@@ -8,8 +8,8 @@ class TetrisMap {
         this.status = this.arrayInit(mapWidth, mapHeight);
         this.brick = {
             status: true,
-            x_pos: 3,
-            y_pos: 3
+            x_pos: -1,
+            y_pos: -1
         };
         
         // status[x][y]

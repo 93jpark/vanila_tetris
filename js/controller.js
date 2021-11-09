@@ -27,13 +27,13 @@ function detectKeyStroke(e) {
             deliverBrickChange(-1, 0);
             console.log("left"); break;
         case 38: // up
-            deliverBrickChange(0, 1);
+            deliverBrickChange(0, -1);
             console.log("up"); break;
        case 39: // right
             deliverBrickChange(1, 0);
             console.log("right"); break;
         case 40: // down
-            deliverBrickChange(0, -1);
+            deliverBrickChange(0, 1);
             console.log("down"); break;
         default:
             console.log('invalid key input');
@@ -44,16 +44,39 @@ function detectKeyStroke(e) {
 function deliverBrickChange(x_change, y_change) {
     let x_pos = tm.brick.x_pos;
     let y_pos = tm.brick.y_pos;
-    if( x_pos < tm.mapSize.widht-1 && x_pos > 0 ) {
+    console.log(x_pos, y_pos, tm.mapSize.width);
+    console.log(x_pos+x_change >= 0 && x_pos+x_change <= tm.mapSize.width-1);
+    if( x_pos+x_change >= 0 && x_pos+x_change <= tm.mapSize.width-1 ) {
         tm.brick.x_pos += x_change;
-    }
+    } 
 
-    if( y_pos < tm.mapSize.height-1 && y_pos > 0 ) {
+    if( y_pos+y_change >= 0 && y_pos+y_change <= tm.mapSize.height-1 ) {
         tm.brick.y_pos += y_change;
     }
-    console.log(`x: ${tm.brick.x_pos}, y: ${tm.brick.y_pos}`);
-    
+
+    console.log(`@@@ x: ${tm.brick.x_pos}, y: ${tm.brick.y_pos}`);
+    //fillCoordinatePoint(tm.brick.x_pos, tm.brick.y_pos);
+    initializeDisplay();
+    updateMap();
+
 }
+
+function createNewBrick() {
+    tm.brick.x_pos = 5;
+    tm.brick.y_pos = 0;
+}
+
+// detect collision with existing bricks or bottom, and create new brick
+function detectCollision() {
+    
+
+    createNewBrick();
+}
+
+
+
+
+
 
 function logKey(e) {
     //console.log(`${e.code} is pressed`);

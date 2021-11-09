@@ -12,8 +12,17 @@ function loadScript(url) {
 
 
 let tm = new TetrisMap(10, 16);
-tm.status[1][1] = 1;
-tm.status[7][7] = 1;
+
+tm.status[13][2]=1;
+tm.status[13][5]=1;
+tm.status[13][7]=1;
+tm.status[13][6]=1;
+
+tm.status[14].fill(1);
+tm.status[15].fill(1);
+console.log(tm.status[0][0]);
+
+
 
 /* GLOBAL CONST for canvas */
 const CANVAS = document.querySelector('#playground');
@@ -24,4 +33,5 @@ ctx.stroke();
 ctx.lineWidth = 0.1;
 
 initializeDisplay();
-fillCoordinatePoint(9,15);
+//fillCoordinatePoint(9,15);
+createNewBrick();
