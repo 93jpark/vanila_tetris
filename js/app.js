@@ -13,14 +13,6 @@ function loadScript(url) {
 
 let tm = new TetrisMap(10, 16);
 
-tm.status[13][2]=1;
-tm.status[13][5]=1;
-tm.status[13][7]=1;
-tm.status[13][6]=1;
-
-tm.status[14].fill(1);
-tm.status[15].fill(1);
-console.log(tm.status[0][0]);
 
 
 
@@ -35,3 +27,4 @@ ctx.lineWidth = 0.1;
 initializeDisplay();
 //fillCoordinatePoint(9,15);
 createNewBrick();
+
