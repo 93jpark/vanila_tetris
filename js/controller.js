@@ -44,7 +44,6 @@ function detectKeyStroke(e) {
 function deliverBrickChange(x_change, y_change) {
     let prev = { x: tm.brick.x_pos, y: tm.brick.y_pos };
     let next = { x: tm.brick.x_pos, y: tm.brick.y_pos };
-        
     
     if( prev.x+x_change >= 0 && prev.x+x_change <= tm.mapSize.width-1 ) {
         next.x = tm.brick.x_pos + x_change;
@@ -61,10 +60,11 @@ function deliverBrickChange(x_change, y_change) {
         tm.brick.y_pos = next.y;
     }
 
+    // re-render game display
     initializeDisplay();
     updateMap();
+    detectClear();
     
-
 }
 
 // create new brick
@@ -85,16 +85,63 @@ function detectCollision(next) {
     if(next.y == 16) {
         return true;
     }
-    
+
     // collision against existing brick
     if (tm.status[next.y][next.x]>0) {
         return true;
     } else {
-        console.log("\tpass!!");
         return false;
     }
 }
 
+// detect line claer
+function detectClear() {
+    let row = tm.mapSize.height;
+    let col = tm.mapSize.width;
+    let clearedList = [];
+    console.log(row, col); // 16 10
+
+    for(let r = 0; r < row; r++) { // ~10
+        let sum = 0; 
+        console.log(sum);
+        for(let c = 0; c < col; c++) { // ~16
+            console.log('test');
+            sum += tm.status[r][c];
+        }
+        //console.log(c);
+        if(sum >= 10) {
+            console.log("pushed");
+            console.log(`fuck ${r}`)
+            clearedList.push(r);
+        }
+    }
+
+
+    if(clearedList.length > 0) {
+        applyClear(clearedList);
+    }
+
+}
+
+function applyClear(clearedList) {
+    console.log("clear...");
+    let getScore = 0;
+    if(clearedList.length > 2) {
+        getScore = clearedList.length * 100;
+    } else {
+        getScore = clearedList.length * 10;
+    }
+    
+    for(let i=0; i<clearedList.length; i++) {
+        tm.status[clearedList[i]].fill(0);
+    }
+}
+
+
+
+function gameOver() {
+    alert('game over');
+}
 
 
 function logKey(e) {
