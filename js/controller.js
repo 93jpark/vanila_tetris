@@ -42,39 +42,58 @@ function detectKeyStroke(e) {
 }
 
 function deliverBrickChange(x_change, y_change) {
-    let x_pos = tm.brick.x_pos;
-    let y_pos = tm.brick.y_pos;
-    console.log(x_pos, y_pos, tm.mapSize.width);
-    console.log(x_pos+x_change >= 0 && x_pos+x_change <= tm.mapSize.width-1);
-    if( x_pos+x_change >= 0 && x_pos+x_change <= tm.mapSize.width-1 ) {
-        tm.brick.x_pos += x_change;
+    let prev = { x: tm.brick.x_pos, y: tm.brick.y_pos };
+    let next = { x: tm.brick.x_pos, y: tm.brick.y_pos };
+        
+    
+    if( prev.x+x_change >= 0 && prev.x+x_change <= tm.mapSize.width-1 ) {
+        next.x = tm.brick.x_pos + x_change;
     } 
 
-    if( y_pos+y_change >= 0 && y_pos+y_change <= tm.mapSize.height-1 ) {
-        tm.brick.y_pos += y_change;
+    if( prev.y+y_change >= 0 && prev.y+y_change <= tm.mapSize.height ) {
+        next.y = tm.brick.y_pos + y_change;
     }
 
-    console.log(`@@@ x: ${tm.brick.x_pos}, y: ${tm.brick.y_pos}`);
-    //fillCoordinatePoint(tm.brick.x_pos, tm.brick.y_pos);
+    if(detectCollision(next)) {
+        createNewBrick();
+    } else {
+        tm.brick.x_pos = next.x;
+        tm.brick.y_pos = next.y;
+    }
+
     initializeDisplay();
     updateMap();
+    
 
 }
 
+// create new brick
 function createNewBrick() {
+    if(tm.isActive) {
+        console.log(`prev one's position : ${tm.brick.x_pos}, ${tm.brick.y_pos}`);
+        tm.status[tm.brick.y_pos][tm.brick.x_pos] = 1;        
+    } else {
+        tm.isActive = true;
+    }
     tm.brick.x_pos = 5;
     tm.brick.y_pos = 0;
 }
 
-// detect collision with existing bricks or bottom, and create new brick
-function detectCollision() {
+// detect collision against existing bricks or bottom, and return true/false
+function detectCollision(next) {
+    // collision against bottom line
+    if(next.y == 16) {
+        return true;
+    }
     
-
-    createNewBrick();
+    // collision against existing brick
+    if (tm.status[next.y][next.x]>0) {
+        return true;
+    } else {
+        console.log("\tpass!!");
+        return false;
+    }
 }
-
-
-
 
 
 
