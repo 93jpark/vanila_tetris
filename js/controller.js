@@ -24,98 +24,158 @@ function detectKeyStroke(e) {
     // up 38, left 37, right 39, down 40
     switch(e.keyCode) {
         case 37: // left
-            deliverBrickChange(-1, 0);
+            deliverBlockChange(-1, 0);
             console.log("left"); break;
         case 38: // up
-            deliverBrickChange(0, -1);
+            deliverBlockChange(0, -1);
             console.log("up"); break;
        case 39: // right
-            deliverBrickChange(1, 0);
+            deliverBlockChange(1, 0);
             console.log("right"); break;
         case 40: // down
-            deliverBrickChange(0, 1);
-            console.log("down"); break;
+            deliverBlockChange(0, 1);
+            tm.score += 1;
         default:
-            console.log('invalid key input');
+            //console.log('invalid key input');
         
     }
 }
 
-function deliverBrickChange(x_change, y_change) {
-    let prev = { x: tm.brick.x_pos, y: tm.brick.y_pos };
-    let next = { x: tm.brick.x_pos, y: tm.brick.y_pos };
-    
-    if( prev.x+x_change >= 0 && prev.x+x_change <= tm.mapSize.width-1 ) {
-        next.x = tm.brick.x_pos + x_change;
-    } 
-
-    if( prev.y+y_change >= 0 && prev.y+y_change <= tm.mapSize.height ) {
-        next.y = tm.brick.y_pos + y_change;
-    }
-
-    if(detectCollision(next)) {
-        createNewBrick();
+function deliverBlockChange(x_change, y_change) {
+    console.log("DELIVER CHANGE")
+    if(!tm.isActive) {
+        console.log("change, not active");
+        createNewBlock();
     } else {
-        tm.brick.x_pos = next.x;
-        tm.brick.y_pos = next.y;
+        console.log("change, active");
+        let prev = { x: tm.block.x_pos, y: tm.block.y_pos };
+        let next = { x: tm.block.x_pos, y: tm.block.y_pos };
+        
+        // prevent move out of playground
+        if( prev.x+x_change >= 0 && prev.x+x_change <= tm.mapSize.width-1 ) {
+            console.log("x increased")
+            next.x = tm.block.x_pos + x_change;
+        } 
+        if( prev.y+y_change >= 0 && prev.y+y_change <= tm.mapSize.height ) {
+            console.log("y increased")
+            next.y = tm.block.y_pos + y_change;
+        }
+    
+        if(detectCollision(next)) {
+            console.log("COLLISION")
+            createNewBlock();
+        } else {
+            console.log('NOT COLLISION')
+            tm.block.x_pos = next.x;
+            tm.block.y_pos = next.y;
+            fillBricksToBlock(tm.block.type);
+        }
     }
-
-    // re-render game display
+    // re-render playground
     initializeDisplay();
     updateMap();
-    detectClear();
-    
+    detectClear();   
+
 }
 
-// create new brick
-function createNewBrick() {
-    if(tm.isActive) {
-        console.log(`prev one's position : ${tm.brick.x_pos}, ${tm.brick.y_pos}`);
-        tm.status[tm.brick.y_pos][tm.brick.x_pos] = 1;        
-    } else {
-        tm.isActive = true;
-    }
-    tm.brick.x_pos = 5;
-    tm.brick.y_pos = 0;
-}
 
-// detect collision against existing bricks or bottom, and return true/false
+// detect collision against existing blocks or bottom, and return true/false
 function detectCollision(next) {
+    console.log('\t detectCollision()');
+
     // collision against bottom line
     if(next.y == 16) {
         return true;
     }
 
-    // collision against existing brick
-    if (tm.status[next.y][next.x]>0) {
+    // collision against existing block
+    if (tm.status[next.y][next.x]>3) {
         return true;
     } else {
         return false;
     }
 }
 
+// create new block
+function createNewBlock() {
+    console.log('\t createNewBlock()');
+    if(tm.isActive) {
+        console.log("active");
+        // apply playing block to status array
+        //tm.status[tm.block.y_pos][tm.block.x_pos] = 0;        
+    } else {
+        console.log("not active");
+        tm.isActive = true;
+    }
+    // new block creation position is (0,5)
+    tm.block.x_pos = 5;
+    tm.block.y_pos = 0;
+
+    tm.block.type = Math.floor(Math.random() * 5);
+    fillBricksToBlock(tm.block.type);
+}
+
+function fillBricksToBlock(type) {
+    let x = tm.block.x_pos;
+    let y = tm.block.y_pos;
+    
+    switch(type) {
+        case 0: // ㅁ
+            // (0,0) (1,0) (1,-1) (0,-1)
+            tm.block.bricks[0] = [x,y];
+            tm.block.bricks[1] = [x+1,y];
+            tm.block.bricks[2] = [x+1,y-1];
+            tm.block.bricks[3] = [x,y-1];
+            break;
+        case 1: // L
+            // (0,0) (0,-1) (0,-2) (1,0)
+            tm.block.bricks[0] = [x,y]
+            tm.block.bricks[1] = [x,y-1]
+            tm.block.bricks[2] = [x,y-2]
+            tm.block.bricks[3] = [x+1,y]
+            break;
+        case 2: // Z
+            //  (0,0) (-1,-1) (0,-1) (1,0)
+            tm.block.bricks[0] = [x,y]
+            tm.block.bricks[1] = [x-1,y-1]
+            tm.block.bricks[2] = [x,y-1]
+            tm.block.bricks[3] = [x+1,y]
+            break;
+        case 3: // ㅡ
+            // (0,0) (0,-1) (0,-2) (0,-3)
+            tm.block.bricks[0] = [x,y]
+            tm.block.bricks[1] = [x,y-1]
+            tm.block.bricks[2] = [x,y-2]
+            tm.block.bricks[3] = [x,y-3]
+            break;
+        case 4: // ㅗ
+            // (0,0) (1,0) (-1,0) (0,-1)
+            tm.block.bricks[0] = [x,y]
+            tm.block.bricks[1] = [x+1,y]
+            tm.block.bricks[2] = [x-1,y]
+            tm.block.bricks[3] = [x,y-1]
+            break;
+
+    }
+}
+
+
 // detect line claer
 function detectClear() {
+    //console.log('\t detectClear()');
     let row = tm.mapSize.height;
     let col = tm.mapSize.width;
     let clearedList = [];
-    console.log(row, col); // 16 10
 
-    for(let r = 0; r < row; r++) { // ~10
+    for(let r = 0; r < row; r++) { // ~16
         let sum = 0; 
-        console.log(sum);
-        for(let c = 0; c < col; c++) { // ~16
-            console.log('test');
+        for(let c = 0; c < col; c++) { // ~10
             sum += tm.status[r][c];
         }
-        //console.log(c);
         if(sum >= 10) {
-            console.log("pushed");
-            console.log(`fuck ${r}`)
             clearedList.push(r);
         }
     }
-
 
     if(clearedList.length > 0) {
         applyClear(clearedList);
@@ -124,20 +184,27 @@ function detectClear() {
 }
 
 function applyClear(clearedList) {
-    console.log("clear...");
+    console.log('\t applyClear()');
+
     let getScore = 0;
     if(clearedList.length > 2) {
-        getScore = clearedList.length * 100;
+        getScore = clearedList.length * 200;
     } else {
-        getScore = clearedList.length * 10;
+        getScore = clearedList.length * 100;
     }
+    tm.score += getScore;
     
+    // drop down all lines above the cleared line
     for(let i=0; i<clearedList.length; i++) {
-        tm.status[clearedList[i]].fill(0);
+        let clearedLine = clearedList[i];
+        tm.status[clearedLine].fill(0);
+        for (let r = clearedLine; r > 0; r--) {
+            tm.status[r] = tm.status[r-1];
+        }   
     }
 }
 
-
+//let autoDrop = setInterval(()=>deliverBlockChange(0, 1), 100);
 
 function gameOver() {
     alert('game over');
@@ -146,7 +213,7 @@ function gameOver() {
 
 function logKey(e) {
     //console.log(`${e.code} is pressed`);
-    console.log(`${e.keyCode} is pressed`);
+    //console.log(`${e.keyCode} is pressed`);
     document.querySelector('#keydown_status').innerHTML = `${e.code}`;
 
     temp_count++;
