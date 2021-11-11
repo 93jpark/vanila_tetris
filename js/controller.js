@@ -24,75 +24,20 @@ function detectKeyStroke(e) {
     // up 38, left 37, right 39, down 40
     switch(e.keyCode) {
         case 37: // left
-            deliverBlockChange(-1, 0);
+            moveBlock(-1, 0);
             console.log("left"); break;
         case 38: // up
-            deliverBlockChange(0, -1);
+            moveBlock(0, -1);
             console.log("up"); break;
        case 39: // right
-            deliverBlockChange(1, 0);
+            moveBlock(1, 0);
             console.log("right"); break;
         case 40: // down
-            deliverBlockChange(0, 1);
+            moveBlock(0, 1);
             tm.score += 1;
         default:
             //console.log('invalid key input');
         
-    }
-}
-
-function deliverBlockChange(x_change, y_change) {
-    console.log("DELIVER CHANGE")
-    if(!tm.isActive) {
-        console.log("change, not active");
-        createNewBlock();
-    } else {
-        console.log("change, active");
-        let prev = { x: tm.block.x_pos, y: tm.block.y_pos };
-        let next = { x: tm.block.x_pos, y: tm.block.y_pos };
-        
-        // prevent move out of playground
-        if( prev.x+x_change >= 0 && prev.x+x_change <= tm.mapSize.width-1 ) {
-            console.log("x increased")
-            next.x = tm.block.x_pos + x_change;
-        } 
-        if( prev.y+y_change >= 0 && prev.y+y_change <= tm.mapSize.height ) {
-            console.log("y increased")
-            next.y = tm.block.y_pos + y_change;
-        }
-    
-        if(detectCollision(next)) {
-            console.log("COLLISION")
-            createNewBlock();
-        } else {
-            console.log('NOT COLLISION')
-            tm.block.x_pos = next.x;
-            tm.block.y_pos = next.y;
-            fillBricksToBlock(tm.block.type);
-        }
-    }
-    // re-render playground
-    initializeDisplay();
-    updateMap();
-    detectClear();   
-
-}
-
-
-// detect collision against existing blocks or bottom, and return true/false
-function detectCollision(next) {
-    console.log('\t detectCollision()');
-
-    // collision against bottom line
-    if(next.y == 16) {
-        return true;
-    }
-
-    // collision against existing block
-    if (tm.status[next.y][next.x]>3) {
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -159,6 +104,64 @@ function fillBricksToBlock(type) {
     }
 }
 
+function moveBlock(x_change, y_change) {
+    console.log("DELIVER CHANGE")
+    if(!tm.isActive) {
+        console.log("change, not active");
+        createNewBlock();
+    } else {
+        console.log("change, active");
+        let prev = { x: tm.block.x_pos, y: tm.block.y_pos };
+        let next = { x: tm.block.x_pos, y: tm.block.y_pos };
+        
+        // prevent move out of playground
+        if( prev.x+x_change >= 0 && prev.x+x_change <= tm.mapSize.width-1 ) {
+            console.log("x increased")
+            next.x = tm.block.x_pos + x_change;
+        } 
+        if( prev.y+y_change >= 0 && prev.y+y_change <= tm.mapSize.height ) {
+            console.log("y increased")
+            next.y = tm.block.y_pos + y_change;
+        }
+    
+        if(detectCollision(next)) {
+            console.log("COLLISION")
+            createNewBlock();
+        } else {
+            console.log('NOT COLLISION')
+            tm.block.x_pos = next.x;
+            tm.block.y_pos = next.y;
+            fillBricksToBlock(tm.block.type);
+        }
+    }
+    // re-render playground
+    initializeDisplay();
+    updateMap();
+    detectClear();   
+
+}
+
+
+// detect collision against existing blocks or bottom, and return true/false
+function detectCollision(next) {
+    console.log('\t detectCollision()');
+
+
+    // collision against bottom line
+    if(next.y == 16) {
+        return true;
+    }
+
+    // collision against existing block
+    if (tm.status[next.y][next.x]>3) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
 
 // detect line claer
 function detectClear() {
@@ -204,7 +207,7 @@ function applyClear(clearedList) {
     }
 }
 
-//let autoDrop = setInterval(()=>deliverBlockChange(0, 1), 100);
+//let autoDrop = setInterval(()=>moveBlock(0, 1), 100);
 
 function gameOver() {
     alert('game over');
