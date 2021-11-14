@@ -4,6 +4,9 @@ console.log('view is connected');
 
 
 function initializeDisplay() {
+    // monitor score board
+    document.querySelector('#score_board').innerHTML = tm.score;
+
     ctx = CANVAS.getContext('2d');
     // set up canvas outline
     ctx.stroke();
@@ -16,7 +19,7 @@ function initializeDisplay() {
 function drawMapOutline() {
     let row = CANVAS.height / BRICK_SIZE;
     let col = CANVAS.width / BRICK_SIZE;
-    console.log(`Tetris playground size: ${col} x ${row}`)
+    //console.log(`Tetris playground size: ${col} x ${row}`)
 
     for(let r = 0; r <= row; r++) {
         for(let c = 0; c <= col; c++) {
@@ -33,10 +36,17 @@ function fillCoordinatePoint(x_pos, y_pos){
     console.log(`filled x:${x_pos}, y:${y_pos}`);
 }
 
+function renderBlock() {
+    for(let i = 0; i < 4; i++) {
+        fillCoordinatePoint(tm.block.bricks[i][0], tm.block.bricks[i][1]);
+    }
+}
+
 function updateMap() {
     let count = 0;
 
-    fillCoordinatePoint(tm.brick.x_pos, tm.brick.y_pos);
+    //fillCoordinatePoint(tm.block.x_pos, tm.block.y_pos);
+    renderBlock();
 
     // fill map based on map status
     for(let r = 0; r < tm.mapSize.height; r++) {
