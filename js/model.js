@@ -31,7 +31,7 @@ class TetrisMap {
         return arr;
     }
 
-    // deep copy for bricks array
+    // return bricks array after deep copy
     getBricks() {
         let newBricks = Array(4);
         for(let i = 0; i < 4; i++) {
