@@ -8,6 +8,10 @@ document.addEventListener('keydown', detectKeyStroke);
 
 let temp_count = 0; // will be removed later
 
+// auto drop controller
+//let autoDrop = setInterval(()=>moveBlock(0, 1), 900);
+
+
 
 function disableScroll(e) {
     switch(e.code) {
@@ -55,60 +59,68 @@ function createNewBlock() {
     // new block creation position is (0,5)
     tm.block.x_pos = 5;
     tm.block.y_pos = 0;
-
     tm.block.type = Math.floor(Math.random() * 5);
-    fillBricksToBlock(tm.block.type);
+    tm.block.bricks = createNewBricks(tm.block.type);
+    //fillBricksToBlock(tm.block.type);
 }
 
-function fillBricksToBlock(type) {
+function createNewBricks(type) {
     let x = tm.block.x_pos;
     let y = tm.block.y_pos;
     
+    let newBricks = Array(4);
+
     switch(type) {
         case 0: // ㅁ
             // (0,0) (1,0) (1,-1) (0,-1)
-            tm.block.bricks[0] = [x,y];
-            tm.block.bricks[1] = [x+1,y];
-            tm.block.bricks[2] = [x+1,y-1];
-            tm.block.bricks[3] = [x,y-1];
+            newBricks[0] = [x,y];
+            newBricks[1] = [x+1,y];
+            newBricks[2] = [x+1,y-1];
+            newBricks[3] = [x,y-1];
             break;
         case 1: // L
             // (0,0) (0,-1) (0,-2) (1,0)
-            tm.block.bricks[0] = [x,y]
-            tm.block.bricks[1] = [x,y-1]
-            tm.block.bricks[2] = [x,y-2]
-            tm.block.bricks[3] = [x+1,y]
+            newBricks[0] = [x,y]
+            newBricks[1] = [x,y-1]
+            newBricks[2] = [x,y-2]
+            newBricks[3] = [x+1,y]
             break;
         case 2: // Z
             //  (0,0) (-1,-1) (0,-1) (1,0)
-            tm.block.bricks[0] = [x,y]
-            tm.block.bricks[1] = [x-1,y-1]
-            tm.block.bricks[2] = [x,y-1]
-            tm.block.bricks[3] = [x+1,y]
+            newBricks[0] = [x,y]
+            newBricks[1] = [x-1,y-1]
+            newBricks[2] = [x,y-1]
+            newBricks[3] = [x+1,y]
             break;
         case 3: // ㅡ
             // (0,0) (0,-1) (0,-2) (0,-3)
-            tm.block.bricks[0] = [x,y]
-            tm.block.bricks[1] = [x,y-1]
-            tm.block.bricks[2] = [x,y-2]
-            tm.block.bricks[3] = [x,y-3]
+            newBricks[0] = [x,y]
+            newBricks[1] = [x,y-1]
+            newBricks[2] = [x,y-2]
+            newBricks[3] = [x,y-3]
             break;
         case 4: // ㅗ
             // (0,0) (1,0) (-1,0) (0,-1)
-            tm.block.bricks[0] = [x,y]
-            tm.block.bricks[1] = [x+1,y]
-            tm.block.bricks[2] = [x-1,y]
-            tm.block.bricks[3] = [x,y-1]
+            newBricks[0] = [x,y]
+            newBricks[1] = [x+1,y]
+            newBricks[2] = [x-1,y]
+            newBricks[3] = [x,y-1]
             break;
 
     }
+    console.log(newBricks);
+    return newBricks;
 }
-
+/*
 function getBricksOfBlock(type, new_x, new_y) {
     let x = new_x;
     let y = new_y;
     
     let newBricks = Array(4);
+
+    for(let i = 0; i < 4; i++) {
+        newBricks[i] = Array(2);
+    }
 
     switch(type) {
         case 0: // ㅁ
@@ -149,10 +161,20 @@ function getBricksOfBlock(type, new_x, new_y) {
     }
     return newBricks;
 }
+*/
+
+function getNewBricksPosition(x_change, y_change) {
+    let newBricks = tm.getBricks();
+    for(let i = 0; i < 4; i++) {
+       newBricks[i][0] += x_change;
+        newBricks[i][1] += y_change;
+    }
+    return newBricks;
+}
 
 
-// set current block's bricks position to status array
-function setCurrentBlock(curr) {
+// store current block's bricks position on status array
+function setCurrentBlock() {
     let bricks = tm.block.bricks;
     for(let i=0; i<bricks.length; i++) {
         let x = tm.block.bricks[i][0] // x
@@ -162,80 +184,55 @@ function setCurrentBlock(curr) {
 }
 
 
-function detectCollision1(next) {
-    let bricks = getBricksOfBlock(tm.block.type, next.x, next.y);
-    for(let i = 0; i < bricks.length; i++) {
-        let x = bricks[i][0];
-        let y = bricks[i][1];
-        console.log("pos 0")
-        if(y>=0 && x>=0) {
-            console.log("pos 1")
+// check all bricks whether collision will be occurred or not
+function detectCollision(newBricks) {
+    //let bricks = getBricksOfBlock(tm.block.type, next.x, next.y);
+    //let bricks = getNewBricksPosition(x_change, y_change);
+    for(let i = 0; i < newBricks.length; i++) {
+        let x = newBricks[i][0]; // x
+        let y = newBricks[i][1]; // y
+        
+        // check when block get into playground
+        if(x>=0 && y>=0) {
             if(tm.status[y][x] >= 1) {
-                console.log("pos 2")
                 return true
             }
-        }
-        
+        } 
     }
-    console.log("pos 3")
     return false;
 }
 
 
+function detectOffScreen(newBricks) {
+    
+}
+
 function moveBlock(x_change, y_change) {
-    console.log("DELIVER CHANGE")
+
     if(!tm.isActive) {
-        console.log("to move, map is not active");
         createNewBlock();
     } else {
-        console.log("to move, map is active");
-        let prev = { x: tm.block.x_pos, y: tm.block.y_pos };
-        let next = { x: tm.block.x_pos + x_change, y: tm.block.y_pos + y_change };
         
-        
-        // TEST CODE GOES HERE
-        if(detectCollision1(next)) {
-            // collision occurred, save current block position
-            console.log("if");
-            setCurrentBlock(prev);
-            createNewBlock();
+        let newBricks = getNewBricksPosition(x_change, y_change);
 
-        } else {
-            // make block move
-            console.log("else");
-            console.log("\t\tblcok is moved");
-            console.log(`\t\tprev: ${tm.block.x_pos}, ${tm.block.y_pos}, next: ${next.x}, ${next.y}`);
-            tm.block.x_pos = next.x;
-            tm.block.y_pos = next.y;
-            fillBricksToBlock(tm.block.type);
+
+        if(!detectOffScreen()) {
+            // detect 
+            if(detectCollision(newBricks)) {
+                // collision occurred, save current block position
+                setCurrentBlock();
+                createNewBlock();
+            } else {
+                // make block move
+                tm.block.bricks = getNewBricksPosition(x_change, y_change);
+                tm.block.x_pos = tm.block.bricks[0][0];
+                tm.block.y_pos = tm.block.bricks[0][1];
+            }
         }
-    
-/*
-        // prevent move out of playground
-        if( prev.x+x_change >= 0 && prev.x+x_change <= tm.mapSize.width-1 ) {
-            console.log("x increased")
-            next.x = tm.block.x_pos + x_change;
-        } 
-        if( prev.y+y_change >= 0 && prev.y+y_change <= tm.mapSize.height ) {
-            console.log("y increased")
-            next.y = tm.block.y_pos + y_change;
-        }
-    
-        // detect collision 
-        // if collision, save block pos and create new block
-        // if not, move block
-        if(detectCollision(next)) {
-            console.log("COLLISION")
-            createNewBlock();
-        } else {
-            console.log('NOT COLLISION')
-            tm.block.x_pos = next.x;
-            tm.block.y_pos = next.y;
-            fillBricksToBlock(tm.block.type);
-        }
-    */
+
+        
+
     }
-
     // re-render playground
     initializeDisplay();
     updateMap();
@@ -243,25 +240,8 @@ function moveBlock(x_change, y_change) {
 
 }
 
-
-// detect collision against existing blocks or bottom, and return true/false
-function detectCollision(next) {
-    console.log('\t detectCollision()');
-
-
-    // collision against bottom line
-    if(next.y == 16) {
-        return true;
-    }
-
-    // collision against existing block
-    if (tm.status[next.y][next.x]>0) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
+// clearedList - array that has cleared line numbers
+// clear cleared row, calculate game score, then drop down all above rows
 function applyClear(clearedList) {
     console.log('\t applyClear()');
 
@@ -283,14 +263,11 @@ function applyClear(clearedList) {
     }
 }
 
-let autoDrop = setInterval(()=>moveBlock(0, 1), 100);
-
-
-// detect line claer
+// check the map whether line claer on every move
 function detectClear() {
-    //console.log('\t detectClear()');
     let row = tm.mapSize.height;
     let col = tm.mapSize.width;
+    // clearedList store cleared line number
     let clearedList = [];
 
     for(let r = 0; r < row; r++) { // ~16
@@ -313,10 +290,7 @@ function gameOver() {
     alert('game over');
 }
 
-
 function logKey(e) {
-    //console.log(`${e.code} is pressed`);
-    //console.log(`${e.keyCode} is pressed`);
     document.querySelector('#keydown_status').innerHTML = `${e.code}`;
 
     temp_count++;
@@ -325,12 +299,3 @@ function logKey(e) {
         console.clear();
     }
 }
-
-
-// // monitor whether focus status
-// if (CANVAS.hasFocus) {
-//     document.querySelector('#focus_status').innerHTML = `out`;
-// } else {
-//     document.querySelector('#focus_status').innerHTML = `in`;
-// }
-
