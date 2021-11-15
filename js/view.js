@@ -1,8 +1,6 @@
 'use strict';
 console.log('view is connected');
 
-
-
 function initializeDisplay() {
     // monitor score board
     document.querySelector('#score_board').innerHTML = tm.score;
@@ -28,23 +26,24 @@ function drawMapOutline() {
     }
 }
 
+// fill out a point on map
 function fillCoordinatePoint(x_pos, y_pos){
     ctx.fillStyle = "#F5AC4E";
-    //y_pos -= tm.mapSize.height-1;
     ctx.fillRect(x_pos*BRICK_SIZE, y_pos*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
     ctx.strokeRect(x_pos*BRICK_SIZE, y_pos*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
-    console.log(`filled x:${x_pos}, y:${y_pos}`);
+    //console.log(`filled x:${x_pos}, y:${y_pos}`);
 }
 
+// render block shape on map
 function renderBlock() {
     for(let i = 0; i < 4; i++) {
         fillCoordinatePoint(tm.block.bricks[i][0], tm.block.bricks[i][1]);
     }
 }
 
-function updateMap() {
-    let count = 0;
 
+// update map with map status
+function updateMap() {
     //fillCoordinatePoint(tm.block.x_pos, tm.block.y_pos);
     renderBlock();
 
@@ -55,7 +54,6 @@ function updateMap() {
                 ctx.fillStyle = "#DD4224";
                 ctx.fillRect(c*BRICK_SIZE, r*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
                 ctx.strokeRect(c*BRICK_SIZE, r*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
-                count += 1;
             }            
         }
     }
