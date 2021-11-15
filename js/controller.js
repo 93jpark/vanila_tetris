@@ -204,7 +204,12 @@ function detectCollision(newBricks) {
 
 
 function detectOffScreen(newBricks) {
-    
+    for(const brick of newBricks) {
+        if(brick[0] < 0 || brick[0] > 9) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function moveBlock(x_change, y_change) {
@@ -215,9 +220,9 @@ function moveBlock(x_change, y_change) {
         
         let newBricks = getNewBricksPosition(x_change, y_change);
 
-
-        if(!detectOffScreen()) {
-            // detect 
+        // detect off-screen move
+        if(!detectOffScreen(newBricks)) {
+            // detect collision
             if(detectCollision(newBricks)) {
                 // collision occurred, save current block position
                 setCurrentBlock();
@@ -225,8 +230,8 @@ function moveBlock(x_change, y_change) {
             } else {
                 // make block move
                 tm.block.bricks = getNewBricksPosition(x_change, y_change);
-                tm.block.x_pos = tm.block.bricks[0][0];
-                tm.block.y_pos = tm.block.bricks[0][1];
+                tm.block.x_pos = tm.block.bricks[0][0]; // x
+                tm.block.y_pos = tm.block.bricks[0][1]; // y
             }
         }
 
