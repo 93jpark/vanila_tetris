@@ -12,7 +12,7 @@ let temp_count = 0; // will be removed later
 //let autoDrop = setInterval(()=>moveBlock(0, 1), 900);
 
 
-
+// disable scrolling from arrow key manipulation
 function disableScroll(e) {
     switch(e.code) {
         case "ArrowUp": case "ArrowDown": 
@@ -24,6 +24,7 @@ function disableScroll(e) {
     }
 }
 
+// detect arrow key stroke, and make move with direction
 function detectKeyStroke(e) {
     // up 38, left 37, right 39, down 40
     switch(e.keyCode) {
@@ -45,7 +46,7 @@ function detectKeyStroke(e) {
     }
 }
 
-// create new block
+// create new block and automatically decide block type
 function createNewBlock() {
     console.log('\t createNewBlock()');
     if(tm.isActive) {
@@ -64,6 +65,7 @@ function createNewBlock() {
     //fillBricksToBlock(tm.block.type);
 }
 
+// create new bricks when block newly made
 function createNewBricks(type) {
     let x = tm.block.x_pos;
     let y = tm.block.y_pos;
@@ -111,58 +113,9 @@ function createNewBricks(type) {
     console.log(newBricks);
     return newBricks;
 }
-/*
-function getBricksOfBlock(type, new_x, new_y) {
-    let x = new_x;
-    let y = new_y;
-    
-    let newBricks = Array(4);
 
-    for(let i = 0; i < 4; i++) {
-        newBricks[i] = Array(2);
-    }
-
-    switch(type) {
-        case 0: // ㅁ
-            // (0,0) (1,0) (1,-1) (0,-1)
-            newBricks[0] = [x,y];
-            newBricks[1] = [x+1,y];
-            newBricks[2] = [x+1,y-1];
-            newBricks[3] = [x,y-1];
-            break;
-        case 1: // L
-            // (0,0) (0,-1) (0,-2) (1,0)
-            newBricks[0] = [x,y]
-            newBricks[1] = [x,y-1]
-            newBricks[2] = [x,y-2]
-            newBricks[3] = [x+1,y]
-            break;
-        case 2: // Z
-            //  (0,0) (-1,-1) (0,-1) (1,0)
-            newBricks[0] = [x,y]
-            newBricks[1] = [x-1,y-1]
-            newBricks[2] = [x,y-1]
-            newBricks[3] = [x+1,y]
-            break;
-        case 3: // ㅡ
-            // (0,0) (0,-1) (0,-2) (0,-3)
-            newBricks[0] = [x,y]
-            newBricks[1] = [x,y-1]
-            newBricks[2] = [x,y-2]
-            newBricks[3] = [x,y-3]
-            break;
-        case 4: // ㅗ
-            // (0,0) (1,0) (-1,0) (0,-1)
-            newBricks[0] = [x,y]
-            newBricks[1] = [x+1,y]
-            newBricks[2] = [x-1,y]
-            newBricks[3] = [x,y-1]
-            break;
-    }
-    return newBricks;
-}
-*/
-
+// x_change, y_change - x and y axis variance
+// get bricks position when move occurred
 function getNewBricksPosition(x_change, y_change) {
     let newBricks = tm.getBricks();
     for(let i = 0; i < 4; i++) {
@@ -184,10 +137,8 @@ function setCurrentBlock() {
 }
 
 
-// check all bricks whether collision will be occurred or not
+// check all bricks whether collision will occurred or not
 function detectCollision(newBricks) {
-    //let bricks = getBricksOfBlock(tm.block.type, next.x, next.y);
-    //let bricks = getNewBricksPosition(x_change, y_change);
     for(let i = 0; i < newBricks.length; i++) {
         let x = newBricks[i][0]; // x
         let y = newBricks[i][1]; // y
@@ -203,6 +154,7 @@ function detectCollision(newBricks) {
 }
 
 
+// check wheter move will cause off-screen or not
 function detectOffScreen(newBricks) {
     for(const brick of newBricks) {
         if(brick[0] < 0 || brick[0] > 9) {
@@ -222,11 +174,16 @@ function moveBlock(x_change, y_change) {
 
         // detect off-screen move
         if(!detectOffScreen(newBricks)) {
+
+
             // detect collision
             if(detectCollision(newBricks)) {
-                // collision occurred, save current block position
-                setCurrentBlock();
-                createNewBlock();
+                // only collision with y axis move makes new block
+                if(y_change > 0) {
+                    // collision occurred, save current block position
+                    setCurrentBlock();
+                    createNewBlock();
+                }
             } else {
                 // make block move
                 tm.block.bricks = getNewBricksPosition(x_change, y_change);
@@ -234,9 +191,6 @@ function moveBlock(x_change, y_change) {
                 tm.block.y_pos = tm.block.bricks[0][1]; // y
             }
         }
-
-        
-
     }
     // re-render playground
     initializeDisplay();
