@@ -164,6 +164,7 @@ function detectOffScreen(newBricks) {
     return false;
 }
 
+// move block when there's no collision or off-screen play
 function moveBlock(x_change, y_change) {
 
     if(!tm.isActive) {
