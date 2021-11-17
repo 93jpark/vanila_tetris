@@ -6,7 +6,7 @@ window.addEventListener('keydown', disableScroll);
 document.addEventListener('keydown', detectKeyStroke);
 //document.querySelector('#res_status').innerHTML = `${CANVAS.offsetWidth} * ${CANVAS.offsetHeight}`;
 
-let temp_count = 0; // will be removed later
+let temp_count = 0;
 
 // auto drop controller
 //let autoDrop = setInterval(()=>moveBlock(0, 1), 900);
@@ -23,16 +23,20 @@ function disableScroll(e) {
         default: break; // pass other keys
     }
 }
+// r 82
+// d 68
 
 // detect arrow key stroke, and make move with direction
 function detectKeyStroke(e) {
     // up 38, left 37, right 39, down 40
+    console.log(e.keyCode);
     switch(e.keyCode) {
         case 37: // left
             moveBlock(-1, 0);
             console.log("left"); break;
         case 38: // up
             //moveBlock(0, -1);
+            rotateBlock()
             console.log("up"); break;
        case 39: // right
             moveBlock(1, 0);
@@ -44,6 +48,54 @@ function detectKeyStroke(e) {
             //console.log('invalid key input');
         
     }
+}
+
+function rotateBlock() {
+    const type = tm.block.type;
+    let current = tm.getBricks();
+    let op = [];
+
+    switch(type) {
+        case 0: // ㅁ
+            console.log("type 0");
+            break;
+        case 1: // L
+            console.log("type 1");
+            for(let i = 0; i < 3; i++) {
+                tm.block.bricks[i+1][0] += operands[type][i][op_counter%4][0] // x
+                tm.block.bricks[i+1][1] += operands[type][i][op_counter%4][1] // y    
+            }
+            break;
+        case 2: // z
+            console.log("type 2");
+            for(let i = 0; i < 3; i++) {
+                tm.block.bricks[i+1][0] += operands[type][i][op_counter%4][0] // x
+                tm.block.bricks[i+1][1] += operands[type][i][op_counter%4][1] // y    
+            }
+
+            break;
+        case 3: // ㅣ
+            console.log("type 3");
+            for(let i = 0; i < 3; i++) {
+                tm.block.bricks[i+1][0] += (operands[type][i][0] * (Math.pow(-1, op_counter+1))) ; // x
+                tm.block.bricks[i+1][1] += (operands[type][i][1] * (Math.pow(-1, op_counter+1))) ; // y
+            }
+            break;
+        case 4: // ㅗ
+            console.log("type 4");
+            for(let i = 0; i < 3; i++) {
+                tm.block.bricks[i+1][0] += operands[type][(i+op_counter)%4][0]; // x
+                tm.block.bricks[i+1][1] += operands[type][(i+op_counter)%4][1]; // y
+            }
+            break;
+    }
+
+    op_counter++;
+
+    initializeDisplay();
+    updateMap();
+    detectClear();  
+
 }
 
 // create new block and automatically decide block type
@@ -62,7 +114,7 @@ function createNewBlock() {
     tm.block.y_pos = 0;
     tm.block.type = Math.floor(Math.random() * 5);
     tm.block.bricks = createNewBricks(tm.block.type);
-    //fillBricksToBlock(tm.block.type);
+    op_counter = 0;
 }
 
 // create new bricks when block newly made
@@ -83,8 +135,8 @@ function createNewBricks(type) {
         case 1: // L
             // (0,0) (0,-1) (0,-2) (1,0)
             newBricks[0] = [x,y]
-            newBricks[1] = [x,y-1]
-            newBricks[2] = [x,y-2]
+            newBricks[1] = [x,y-2]
+            newBricks[2] = [x,y-1]
             newBricks[3] = [x+1,y]
             break;
         case 2: // Z
@@ -104,9 +156,9 @@ function createNewBricks(type) {
         case 4: // ㅗ
             // (0,0) (1,0) (-1,0) (0,-1)
             newBricks[0] = [x,y]
-            newBricks[1] = [x+1,y]
-            newBricks[2] = [x-1,y]
-            newBricks[3] = [x,y-1]
+            newBricks[1] = [x-1,y] // left
+            newBricks[2] = [x,y-1] // upper
+            newBricks[3] = [x+1,y] // right
             break;
 
     }
