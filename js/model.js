@@ -3,9 +3,11 @@ console.log('model is connected');
 
 class TetrisMap {
     constructor(mapWidth, mapHeight) { // 16 10
+        this.score = 0;
         this.isActive = false;
         this.mapSize = {width: mapWidth, height: mapHeight};
         this.status = this.arrayInit(mapWidth, mapHeight);
+
         this.block = {
             status: true,
             x_pos: -1,
@@ -13,10 +15,6 @@ class TetrisMap {
             type: -1,
             bricks: Array(4)
         };
-        this.score = 0;
-        
-        // status[x][y]
-        //console.log(this.status);
     }
 
     // get num of col/row, then init array for mapping
@@ -41,5 +39,12 @@ class TetrisMap {
     }
 } 
 
+// operads - type:rotation operands
+const operands = {
+        1:[ [ [2,2],[-2,2],[-2,-2],[+2,-2] ], [ [1,1],[-1,1],[-1,-1],[1,-1] ], [ [-1,1],[-1,-1],[1,-1],[1,1] ] ] , // L
+        2:[ [ [2,0],[0,2],[-2,0],[0,-2] ], [ [1,1],[-1,1],[-1,-1],[1,-1] ] , [ [-1,1],[-1,-1],[1,-1],[1,1] ]  ] , // Z
+        3:[[-1,-1],[-2,-2],[-3,-3]] , // ㅣ
+        4:[[1,-1],[1,1],[-1,1],[-1,-1]] // ㅗ
 
-
+}
+let op_counter = 0;
