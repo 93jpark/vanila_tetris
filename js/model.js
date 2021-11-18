@@ -32,6 +32,7 @@ class TetrisMap {
     // return bricks array after deep copy
     getBricks() {
         let newBricks = Array(4);
+        
         for(let i = 0; i < 4; i++) {
             newBricks[i] = this.block.bricks[i].slice();
         }
