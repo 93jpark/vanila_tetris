@@ -24,7 +24,7 @@ function startGame() {
     initializeDisplay();
 
     tm.isActive = true;
-    document.querySelector('#game_popup').style.display = 'none';
+    document.querySelector('#game_popup_container').style.display = 'none';
     createNewBlock();
     //autoDrop = setInterval(()=>moveBlock(0, 1), 900);
 
@@ -32,11 +32,14 @@ function startGame() {
 
 function gameOver() {
     tm.isActive = false;
-    console.log("game over");
     clearInterval(autoDrop);
-    document.querySelector("#game_popup").style.display = 'block';
-    document.querySelector("#game_popup").innerHTML = 'Game Over';
-    
+    document.querySelector("#game_popup_container").style.display = 'block';
+    //Game Over<br>Press Enter to play again
+    document.querySelector("#popup_title").innerHTML = '😭😭😭 Game Over 😭😭😭';
+    document.querySelector("#popup_title").style.top = '30%';
+    document.querySelector("#popup_subtitle").innerHTML = 'Enter to play again🕹';
+    document.querySelector("#popup_subtitle").style.top = '50%';
+    document.querySelector("#popup_subtitle").style.fontSize = '1.5em';
 }
 
 
@@ -51,23 +54,21 @@ function detectKeyStroke(e) {
             }        
             break;
         case 32: // space bar 
-            console.log("space bar");
-            hardDrop();
+            if(tm.isActive){
+                hardDrop();
+            }
             break;
         case 37: // left
             if(tm.isActive) {
-                moveBlock(-1, 0);
-                console.log("left"); break;
+                moveBlock(-1, 0); break;
             }
         case 38: // up
             if(tm.isActive) {
-                rotateBlock()
-                console.log("up"); break;
+                rotateBlock(); break;
             }
         case 39: // right
             if(tm.isActive) {
-                moveBlock(1, 0);
-                console.log("right"); break;
+                moveBlock(1, 0); break;
             }
         case 40: // down
             if(tm.isActive) {
@@ -99,6 +100,7 @@ function hardDrop() {
         }
     }
     tm.block.bricks = prev;
+    tm.score += (total_y_changes*2);
     setCurrentBlock();
     createNewBlock();
 
