@@ -1,17 +1,9 @@
-function loadScript(url) {    
-    let head = document.getElementsByTagName('head')[0];
-    let script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
-    head.appendChild(script);
-}
+let tm = new TetrisMap(10, 16);
 
-// loadScript('./js/controller.js');
-// loadScript('./js/view.js');
-// loadScript('./js/model.js');
+/* GLOBAL CONST for canvas */
+const CANVAS = document.querySelector('#playground');
+const BRICK_SIZE = 50;
 
-
-
-//fillCoordinatePoint(9,15);
-//createNewBlock();
-
+let ctx = CANVAS.getContext('2d');
+ctx.stroke();
+ctx.lineWidth = 0.1;
