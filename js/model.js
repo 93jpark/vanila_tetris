@@ -9,7 +9,7 @@ class TetrisMap {
         this.status = this.arrayInit(mapWidth, mapHeight);
 
         this.block = {
-            status: true,
+            isMoved: false,
             x_pos: -1,
             y_pos: -1,
             type: -1,
