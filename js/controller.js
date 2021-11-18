@@ -1,15 +1,11 @@
 'use strict';
 console.log('controller is connected');
 
-//document.addEventListener('keydown', logKey);
 window.addEventListener('keydown', disableScroll);
 document.addEventListener('keydown', detectKeyStroke);
-//document.querySelector('#res_status').innerHTML = `${CANVAS.offsetWidth} * ${CANVAS.offsetHeight}`;
 
 // auto drop controller
 let autoDrop;// = setInterval(()=>moveBlock(0, 1), 900);
-
-
 
 // disable scrolling from arrow key manipulation
 function disableScroll(e) {
@@ -138,8 +134,8 @@ function rotateBlock() {
 // create new block and automatically decide block type
 function createNewBlock() {
     if(tm.isActive) {
-        // new block creation position is (0,5)
-        tm.block.x_pos = 5;
+        // new block creation position is (0,4)
+        tm.block.x_pos = 4;
         tm.block.y_pos = 0;
         tm.block.type = Math.floor(Math.random() * 5);
         tm.block.bricks = createNewBricks(tm.block.type);
