@@ -26,7 +26,7 @@ function startGame() {
     tm.isActive = true;
     document.querySelector('#game_popup').style.display = 'none';
     createNewBlock();
-    autoDrop = setInterval(()=>moveBlock(0, 1), 900);
+    //autoDrop = setInterval(()=>moveBlock(0, 1), 900);
 
 }
 
@@ -47,9 +47,12 @@ function detectKeyStroke(e) {
     switch(e.keyCode) {
         case 13: // Enter
             if(!tm.isActive) {
-                console.log("game is activated");
                 startGame();
             }        
+            break;
+        case 32: // space bar 
+            console.log("space bar");
+            hardDrop();
             break;
         case 37: // left
             if(tm.isActive) {
@@ -76,6 +79,35 @@ function detectKeyStroke(e) {
         
     }
 }
+
+function hardDrop() {
+    let total_y_changes = 0; // (0,1);
+    let newBricks = tm.getBricks();
+    let prev = tm.getBricks();
+    let isDone = false;
+
+    while(!isDone) {
+        if(detectCollision(newBricks)) {
+            isDone = true;
+        } else {
+            total_y_changes++;
+            for(let i = 0; i < newBricks.length; i++) {
+                prev[i][0] = newBricks[i][0];
+                prev[i][1] = newBricks[i][1];
+                newBricks[i][1] = tm.block.bricks[i][1] + total_y_changes;
+            }
+        }
+    }
+    tm.block.bricks = prev;
+    setCurrentBlock();
+    createNewBlock();
+
+    // re-render map
+    initializeDisplay();
+    updateMap();
+    detectClear();
+}
+
 
 function rotateBlock() {
     if(tm.isActive) {
@@ -135,16 +167,13 @@ function rotateBlock() {
 function createNewBlock() {
     if(tm.isActive) {
         // new block creation position is (0,4)
+        
         tm.block.x_pos = 4;
         tm.block.y_pos = 0;
         tm.block.type = Math.floor(Math.random() * 5);
         tm.block.bricks = createNewBricks(tm.block.type);
-        tm.block.isMoved = false;
         op_counter = 0;    
-    } else {
-        //tm.isActive = true;
     }
-    
 }
 
 // create new bricks when block newly made
@@ -262,7 +291,6 @@ function moveBlock(x_change, y_change) {
         // detect off-screen move
         if(!detectOffScreen(newBricks)) {
 
-
             // detect collision
             if(detectCollision(newBricks)) {
                 // only collision with y axis move makes new block
@@ -281,6 +309,7 @@ function moveBlock(x_change, y_change) {
         }
     }
     // re-render playground
+    
     initializeDisplay();
     updateMap();
     detectClear();   
@@ -290,7 +319,7 @@ function moveBlock(x_change, y_change) {
 // clearedList - array that has cleared line numbers
 // clear cleared row, calculate game score, then drop down all above rows
 function applyClear(clearedList) {
-    console.log('\t applyClear()');
+    //console.log('\t applyClear()');
 
     let getScore = 0;
     if(clearedList.length > 2) {
@@ -308,6 +337,8 @@ function applyClear(clearedList) {
             tm.status[r] = tm.status[r-1];
         }   
     }
+    initializeDisplay();
+    updateMap();
 }
 
 // check the map whether line claer on every move
