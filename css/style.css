@@ -45,15 +45,29 @@ footer * {
     margin: auto;
 }
 
+#game_popup {
+    display: block;
+    position: absolute;
+    width: 60vw;
+    height: 30vh;
+    top: 30vh;
+    text-align: center;
+    font-size: 1.8em;
+    line-height: 30vh;
+    background-color: lightgrey;
+    opacity: 80%;
+}
+
 #monitor_area {
     /* temporary hiden */
     /*display: none;*/
 
-    width: 15vh;
+    width: 7vw;
+    height: 10vh;
     position: absolute;
-    right: 25vh;
+    right: 7vw;
     top: 200px;
-    background-color:bisque;
+
     
 }
 
