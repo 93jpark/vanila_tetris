@@ -113,16 +113,14 @@ footer * {
 }
 
 .monitor span {
+    text-align: center;
     border: 1px solid black;
     height: 20px;
     padding: 5px;
 }
 
-#focus_status, #keydown_status, #res_status {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
+.monitor #score_board {
+    text-align: center;
 }
 
 #playground_area {
@@ -131,8 +129,4 @@ footer * {
     border: 0.5px solid black;
     border-collapse: collapse;
     margin: 1vh auto;
-}
-
-#playground {
-
 }
