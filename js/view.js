@@ -1,6 +1,8 @@
 'use strict';
 console.log('view is connected');
 
+
+// draw canvas, score board, and grid map
 function initializeDisplay() {
     // monitor score board
     document.querySelector('#score_board').innerHTML = tm.score;
@@ -14,10 +16,10 @@ function initializeDisplay() {
     drawMapOutline();
 }
 
+// draw empty map grid outline 
 function drawMapOutline() {
     let row = CANVAS.height / BRICK_SIZE;
     let col = CANVAS.width / BRICK_SIZE;
-    //console.log(`Tetris playground size: ${col} x ${row}`)
 
     for(let r = 0; r <= row; r++) {
         for(let c = 0; c <= col; c++) {
