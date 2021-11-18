@@ -26,14 +26,14 @@ function startGame() {
     tm.isActive = true;
     document.querySelector('#game_popup_container').style.display = 'none';
     createNewBlock();
-    //autoDrop = setInterval(()=>moveBlock(0, 1), 900);
-
+    autoDrop = setInterval(()=>moveBlock(0, 1), 900);
 }
 
 function gameOver() {
     tm.isActive = false;
     clearInterval(autoDrop);
     document.querySelector("#game_popup_container").style.display = 'block';
+    document.querySelector("#game_popup_container").style.height = '35vh';
     //Game Over<br>Press Enter to play again
     document.querySelector("#popup_title").innerHTML = '😭😭😭 Game Over 😭😭😭';
     document.querySelector("#popup_title").style.top = '30%';
