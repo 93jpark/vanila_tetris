@@ -4,7 +4,7 @@ console.log('model is connected');
 class TetrisMap {
     constructor(mapWidth, mapHeight) { // 16 10
         this.score = 0;
-        this.isActive = false;
+        this.isActive = false; // game play status
         this.mapSize = {width: mapWidth, height: mapHeight};
         this.status = this.arrayInit(mapWidth, mapHeight);
 
