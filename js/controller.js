@@ -1,15 +1,14 @@
 'use strict';
 console.log('controller is connected');
 
-document.addEventListener('keydown', logKey);
+//document.addEventListener('keydown', logKey);
 window.addEventListener('keydown', disableScroll);
 document.addEventListener('keydown', detectKeyStroke);
 //document.querySelector('#res_status').innerHTML = `${CANVAS.offsetWidth} * ${CANVAS.offsetHeight}`;
 
-let temp_count = 0;
-
 // auto drop controller
-//let autoDrop = setInterval(()=>moveBlock(0, 1), 900);
+let autoDrop;// = setInterval(()=>moveBlock(0, 1), 900);
+
 
 
 // disable scrolling from arrow key manipulation
@@ -23,27 +22,59 @@ function disableScroll(e) {
         default: break; // pass other keys
     }
 }
-// r 82
-// d 68
+
+function startGame() {
+    tm = new TetrisMap(10, 16);
+    initializeDisplay();
+
+    tm.isActive = true;
+    document.querySelector('#game_popup').style.display = 'none';
+    createNewBlock();
+    autoDrop = setInterval(()=>moveBlock(0, 1), 900);
+
+}
+
+function gameOver() {
+    tm.isActive = false;
+    console.log("game over");
+    clearInterval(autoDrop);
+    document.querySelector("#game_popup").style.display = 'block';
+    document.querySelector("#game_popup").innerHTML = 'Game Over';
+    
+}
+
 
 // detect arrow key stroke, and make move with direction
 function detectKeyStroke(e) {
     // up 38, left 37, right 39, down 40
-    console.log(e.keyCode);
+
     switch(e.keyCode) {
+        case 13: // Enter
+            if(!tm.isActive) {
+                console.log("game is activated");
+                startGame();
+            }        
+            break;
         case 37: // left
-            moveBlock(-1, 0);
-            console.log("left"); break;
+            if(tm.isActive) {
+                moveBlock(-1, 0);
+                console.log("left"); break;
+            }
         case 38: // up
-            //moveBlock(0, -1);
-            rotateBlock()
-            console.log("up"); break;
-       case 39: // right
-            moveBlock(1, 0);
-            console.log("right"); break;
+            if(tm.isActive) {
+                rotateBlock()
+                console.log("up"); break;
+            }
+        case 39: // right
+            if(tm.isActive) {
+                moveBlock(1, 0);
+                console.log("right"); break;
+            }
         case 40: // down
-            moveBlock(0, 1);
-            tm.score += 1;
+            if(tm.isActive) {
+                moveBlock(0, 1);
+                tm.score += 1;
+            }
         default:
             //console.log('invalid key input');
         
@@ -51,70 +82,73 @@ function detectKeyStroke(e) {
 }
 
 function rotateBlock() {
-    const type = tm.block.type;
-    let current = tm.getBricks();
-    let op = [];
+    if(tm.isActive) {
+        const type = tm.block.type;
+        let rotatedBricks = tm.getBricks();
 
-    switch(type) {
-        case 0: // ㅁ
-            console.log("type 0");
-            break;
-        case 1: // L
-            console.log("type 1");
-            for(let i = 0; i < 3; i++) {
-                tm.block.bricks[i+1][0] += operands[type][i][op_counter%4][0] // x
-                tm.block.bricks[i+1][1] += operands[type][i][op_counter%4][1] // y    
-            }
-            break;
-        case 2: // z
-            console.log("type 2");
-            for(let i = 0; i < 3; i++) {
-                tm.block.bricks[i+1][0] += operands[type][i][op_counter%4][0] // x
-                tm.block.bricks[i+1][1] += operands[type][i][op_counter%4][1] // y    
-            }
+        switch(type) {
+            case 0: // ㅁ
+                console.log("type 0");
+                break;
+            case 1: // L
+                console.log("type 1");
+                for(let i = 0; i < 3; i++) {
+                    rotatedBricks[i+1][0] += operands[type][i][op_counter%4][0] // x
+                    rotatedBricks[i+1][1] += operands[type][i][op_counter%4][1] // y    
+                }
+                break;
+            case 2: // z
+                console.log("type 2");
+                for(let i = 0; i < 3; i++) {
+                    rotatedBricks[i+1][0] += operands[type][i][op_counter%4][0] // x
+                    rotatedBricks[i+1][1] += operands[type][i][op_counter%4][1] // y    
+                }
 
-            break;
-        case 3: // ㅣ
-            console.log("type 3");
-            for(let i = 0; i < 3; i++) {
-                tm.block.bricks[i+1][0] += (operands[type][i][0] * (Math.pow(-1, op_counter+1))) ; // x
-                tm.block.bricks[i+1][1] += (operands[type][i][1] * (Math.pow(-1, op_counter+1))) ; // y
-            }
-            break;
-        case 4: // ㅗ
-            console.log("type 4");
-            for(let i = 0; i < 3; i++) {
-                tm.block.bricks[i+1][0] += operands[type][(i+op_counter)%4][0]; // x
-                tm.block.bricks[i+1][1] += operands[type][(i+op_counter)%4][1]; // y
-            }
-            break;
+                break;
+            case 3: // ㅣ
+                console.log("type 3");
+                for(let i = 0; i < 3; i++) {
+                    rotatedBricks[i+1][0] += (operands[type][i][0] * (Math.pow(-1, op_counter+1))) ; // x
+                    rotatedBricks[i+1][1] += (operands[type][i][1] * (Math.pow(-1, op_counter+1))) ; // y
+                }
+                break;
+            case 4: // ㅗ
+                console.log("type 4");
+                for(let i = 0; i < 3; i++) {
+                    rotatedBricks[i+1][0] += operands[type][(i+op_counter)%4][0]; // x
+                    rotatedBricks[i+1][1] += operands[type][(i+op_counter)%4][1]; // y
+                }
+                break;
+        }
+
+        if(!detectCollision(rotatedBricks) && !detectOffScreen(rotatedBricks)) {
+            console.log("rotating success")
+            tm.block.bricks = rotatedBricks;
+            op_counter++;
+        }
+
+        initializeDisplay();
+        updateMap();
+        detectClear(); 
     }
-
-    op_counter++;
-
-    initializeDisplay();
-    updateMap();
-    detectClear();  
+     
 
 }
 
 // create new block and automatically decide block type
 function createNewBlock() {
-    console.log('\t createNewBlock()');
     if(tm.isActive) {
-        console.log("active");
-        // apply playing block to status array
-        //tm.status[tm.block.y_pos][tm.block.x_pos] = 0;        
+        // new block creation position is (0,5)
+        tm.block.x_pos = 5;
+        tm.block.y_pos = 0;
+        tm.block.type = Math.floor(Math.random() * 5);
+        tm.block.bricks = createNewBricks(tm.block.type);
+        tm.block.isMoved = false;
+        op_counter = 0;    
     } else {
-        console.log("not active");
-        tm.isActive = true;
+        //tm.isActive = true;
     }
-    // new block creation position is (0,5)
-    tm.block.x_pos = 5;
-    tm.block.y_pos = 0;
-    tm.block.type = Math.floor(Math.random() * 5);
-    tm.block.bricks = createNewBricks(tm.block.type);
-    op_counter = 0;
+    
 }
 
 // create new bricks when block newly made
@@ -162,7 +196,7 @@ function createNewBricks(type) {
             break;
 
     }
-    console.log(newBricks);
+
     return newBricks;
 }
 
@@ -181,10 +215,16 @@ function getNewBricksPosition(x_change, y_change) {
 // store current block's bricks position on status array
 function setCurrentBlock() {
     let bricks = tm.block.bricks;
+
     for(let i=0; i<bricks.length; i++) {
         let x = tm.block.bricks[i][0] // x
         let y = tm.block.bricks[i][1] // y
-        tm.status[y][x] = 1;
+        if(y < 0 ) {
+            gameOver();
+        } else {
+            tm.status[y][x] = 1;
+        }
+        
     }
 }
 
@@ -219,9 +259,7 @@ function detectOffScreen(newBricks) {
 // move block when there's no collision or off-screen play
 function moveBlock(x_change, y_change) {
 
-    if(!tm.isActive) {
-        createNewBlock();
-    } else {
+    if(tm.isActive) {
         
         let newBricks = getNewBricksPosition(x_change, y_change);
 
@@ -236,6 +274,7 @@ function moveBlock(x_change, y_change) {
                     // collision occurred, save current block position
                     setCurrentBlock();
                     createNewBlock();
+                    
                 }
             } else {
                 // make block move
@@ -298,16 +337,3 @@ function detectClear() {
 
 }
 
-function gameOver() {
-    alert('game over');
-}
-
-function logKey(e) {
-    document.querySelector('#keydown_status').innerHTML = `${e.code}`;
-
-    temp_count++;
-    if(temp_count > 10) {
-        temp_count = 0;
-        console.clear();
-    }
-}
