@@ -2,7 +2,8 @@
 console.log('controller is connected');
 
 window.addEventListener('keydown', disableScroll);
-document.addEventListener('keydown', detectKeyStroke);
+//document.addEventListener('keydown', detectKeyStroke);
+document.onkeydown = detectKeyStroke;
 
 // auto drop controller
 let autoDrop;// = setInterval(()=>moveBlock(0, 1), 900);
@@ -149,6 +150,13 @@ function rotateBlock() {
                     rotatedBricks[i+1][1] += operands[type][(i+op_counter)%4][1]; // y
                 }
                 break;
+            case 5: // S
+                console.log("type 5");
+                for(let i = 0; i < 3; i++) {
+                    rotatedBricks[i+1][0] += operands[type][(i+op_counter)%4][0]; // x
+                    rotatedBricks[i+1][1] += operands[type][(i+op_counter)%4][1]; // y
+                }
+                break;
         }
 
         if(!detectCollision(rotatedBricks) && !detectOffScreen(rotatedBricks)) {
@@ -156,13 +164,10 @@ function rotateBlock() {
             tm.block.bricks = rotatedBricks;
             op_counter++;
         }
-
         initializeDisplay();
         updateMap();
         detectClear(); 
     }
-     
-
 }
 
 // create new block and automatically decide block type
@@ -172,9 +177,9 @@ function createNewBlock() {
         
         tm.block.x_pos = 4;
         tm.block.y_pos = 0;
-        tm.block.type = Math.floor(Math.random() * 5);
+        tm.block.type = Math.floor(Math.random() * 6);
         tm.block.bricks = createNewBricks(tm.block.type);
-        op_counter = 0;    
+        op_counter = 0;
     }
 }
 
@@ -221,6 +226,14 @@ function createNewBricks(type) {
             newBricks[2] = [x,y-1] // upper
             newBricks[3] = [x+1,y] // right
             break;
+        case 5: // S need to change
+            //  (0,0) (-1,-1) (0,-1) (1,0)
+            newBricks[0] = [x,y]
+            newBricks[1] = [x-1,y-1]
+            newBricks[2] = [x,y-1]
+            newBricks[3] = [x+1,y]
+            break;
+
 
     }
 
@@ -229,7 +242,7 @@ function createNewBricks(type) {
 
 // x_change, y_change - x and y axis variance
 // get bricks position when move occurred
-function getNewBricksPosition(x_change, y_change) {
+function getNextCoordinate(x_change, y_change) {
     let newBricks = tm.getBricks();
     for(let i = 0; i < 4; i++) {
        newBricks[i][0] += x_change;
@@ -241,15 +254,21 @@ function getNewBricksPosition(x_change, y_change) {
 
 // store current block's bricks position on status array
 function setCurrentBlock() {
-    let bricks = tm.block.bricks;
+    let bricks = tm.block.bricks; // 4개의 블럭조각이 저장된 배열
 
+    console.log("set current block's bricks")
+    console.log(bricks);
+
+    let count = 0;
     for(let i=0; i<bricks.length; i++) {
         let x = tm.block.bricks[i][0] // x
         let y = tm.block.bricks[i][1] // y
         if(y < 0 ) {
             gameOver();
         } else {
+            console.log(`count is ${count}`);
             tm.status[y][x] = 1;
+            count++;
         }
         
     }
@@ -288,7 +307,7 @@ function moveBlock(x_change, y_change) {
 
     if(tm.isActive) {
         
-        let newBricks = getNewBricksPosition(x_change, y_change);
+        let newBricks = getNextCoordinate(x_change, y_change);
 
         // detect off-screen move
         if(!detectOffScreen(newBricks)) {
@@ -304,7 +323,7 @@ function moveBlock(x_change, y_change) {
                 }
             } else {
                 // make block move
-                tm.block.bricks = getNewBricksPosition(x_change, y_change);
+                tm.block.bricks = getNextCoordinate(x_change, y_change);
                 tm.block.x_pos = tm.block.bricks[0][0]; // x
                 tm.block.y_pos = tm.block.bricks[0][1]; // y
             }
@@ -318,10 +337,41 @@ function moveBlock(x_change, y_change) {
 
 }
 
+
+
+// check the map whether line claer on every move
+function detectClear() {
+    let row = tm.mapSize.height;
+    let col = tm.mapSize.width;
+    //console.log("row is ", row);
+    //console.log("row is ", col);
+    
+    // clearedList store cleared line number
+    let clearedList = [];
+
+    for(let r = 0; r < row; r++) { // ~16
+        let sum = 0; 
+        for(let c = 0; c < col; c++) { // ~10
+            sum += tm.status[r][c];
+        }
+        if(sum >= 10) {
+            console.log(`${r}line is added to clear`);
+            clearedList.push(r);
+        }
+    }
+
+    if(clearedList.length > 0) {
+        console.log(`${clearedList.length} lines ready to clear`);
+        applyClear(clearedList);
+    }
+
+}
+
 // clearedList - array that has cleared line numbers
 // clear cleared row, calculate game score, then drop down all above rows
 function applyClear(clearedList) {
     //console.log('\t applyClear()');
+    console.log(`${clearedList}`);
 
     let getScore = 0;
     if(clearedList.length > 2) {
@@ -342,27 +392,3 @@ function applyClear(clearedList) {
     initializeDisplay();
     updateMap();
 }
-
-// check the map whether line claer on every move
-function detectClear() {
-    let row = tm.mapSize.height;
-    let col = tm.mapSize.width;
-    // clearedList store cleared line number
-    let clearedList = [];
-
-    for(let r = 0; r < row; r++) { // ~16
-        let sum = 0; 
-        for(let c = 0; c < col; c++) { // ~10
-            sum += tm.status[r][c];
-        }
-        if(sum >= 10) {
-            clearedList.push(r);
-        }
-    }
-
-    if(clearedList.length > 0) {
-        applyClear(clearedList);
-    }
-
-}
-

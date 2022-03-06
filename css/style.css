@@ -11,16 +11,23 @@ header h1 {
 }
 
 nav {
-    height: 5vh;
     background-color: lightpink;
     display: flex;
+    align-items: center;
     justify-content: space-around;
+    height: 7vh;
+    
 }
 
 .nav_menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
     width: 50px;
     height: 5vh;
-    box-shadow: 0 0 0 1px #000 inset;  /*inner border*/
+    
     margin: 0 auto;
 }
 
@@ -129,4 +136,14 @@ footer * {
     border: 0.5px solid black;
     border-collapse: collapse;
     margin: 1vh auto;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.nav_menu img {
+    width: 70%;
+    margin-right: 3px;
 }

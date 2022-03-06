@@ -33,7 +33,6 @@ function fillCoordinatePoint(x_pos, y_pos){
     ctx.fillStyle = "#F5AC4E";
     ctx.fillRect(x_pos*BRICK_SIZE, y_pos*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
     ctx.strokeRect(x_pos*BRICK_SIZE, y_pos*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
-    //console.log(`filled x:${x_pos}, y:${y_pos}`);
 }
 
 // render block shape on map
@@ -53,7 +52,7 @@ function updateMap() {
     for(let r = 0; r < tm.mapSize.height; r++) {
         for(let c = 0; c < tm.mapSize.width; c++) {
             if(tm.status[r][c] > 0) {
-                ctx.fillStyle = "#DD4224";
+                ctx.fillStyle = "#C62B27"; // dropped block's color
                 ctx.fillRect(c*BRICK_SIZE, r*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
                 ctx.strokeRect(c*BRICK_SIZE, r*BRICK_SIZE, BRICK_SIZE, BRICK_SIZE);
             }            
