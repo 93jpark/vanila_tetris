@@ -152,10 +152,17 @@ function rotateBlock() {
                 break;
             case 5: // S
                 console.log("type 5");
-                console.log("so type is :" + type);
                 for(let i = 0; i < 3; i++) {
                     rotatedBricks[i+1][0] += operands[type][i][op_counter%4][0] // x
                     rotatedBricks[i+1][1] += operands[type][i][op_counter%4][1] // y    
+
+                    
+                    console.log('brick ' + (i+1));
+                    console.log('x:'+rotatedBricks[i+1][0])
+                    console.log('y:'+rotatedBricks[i+1][1])
+
+                    
+                    
                 }
                 break;
         }
