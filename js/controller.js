@@ -152,9 +152,10 @@ function rotateBlock() {
                 break;
             case 5: // S
                 console.log("type 5");
+                console.log("so type is :" + type);
                 for(let i = 0; i < 3; i++) {
-                    rotatedBricks[i+1][0] += operands[type][(i+op_counter)%4][0]; // x
-                    rotatedBricks[i+1][1] += operands[type][(i+op_counter)%4][1]; // y
+                    rotatedBricks[i+1][0] += operands[type][i][op_counter%4][0] // x
+                    rotatedBricks[i+1][1] += operands[type][i][op_counter%4][1] // y    
                 }
                 break;
         }
@@ -190,6 +191,7 @@ function createNewBricks(type) {
     
     let newBricks = Array(4);
 
+    console.log('type in createNewBricks = ' + type);
     switch(type) {
         case 0: // ㅁ
             // (0,0) (1,0) (1,-1) (0,-1)
@@ -226,12 +228,12 @@ function createNewBricks(type) {
             newBricks[2] = [x,y-1] // upper
             newBricks[3] = [x+1,y] // right
             break;
-        case 5: // S need to change
-            //  (0,0) (-1,-1) (0,-1) (1,0)
+        case 5: // S
+            //  (0,0) (-1,0) (0,-1) (1,-1)
             newBricks[0] = [x,y]
-            newBricks[1] = [x-1,y-1]
+            newBricks[1] = [x-1,y]
             newBricks[2] = [x,y-1]
-            newBricks[3] = [x+1,y]
+            newBricks[3] = [x+1,y-1]
             break;
 
 
